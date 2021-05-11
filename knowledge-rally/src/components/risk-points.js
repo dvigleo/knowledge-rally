@@ -6,18 +6,23 @@ import {
   Typography,
   Button,
   Radio,
+  Divider,
   Grid,
 } from "@material-ui/core";
+import { Link } from "react-router-dom";
 
 const points = [
   {
     value: "0",
+    label: "0 points",
   },
   {
     value: "1",
+    label: "1 point",
   },
   {
     value: "2",
+    label: "2 points",
   },
 ];
 
@@ -37,14 +42,16 @@ const RiskPoints = ({ handlePointsToRisk }) => {
   const handleChange = (event) => {
     setPointsToRisk(event.target.value);
   };
+
   return (
     <Grid item xs={8} style={containerStyle}>
-      <Grid container alignItems="center">
+      <Grid container justify="center">
         <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
           Select the points to risk
         </Typography>
       </Grid>
-      <Grid container alignItems="center">
+      <Divider />
+      <Grid container justify="center">
         <form>
           <FormControl component="fieldset" fullWidth={true}>
             <RadioGroup
@@ -52,25 +59,37 @@ const RiskPoints = ({ handlePointsToRisk }) => {
               name="pointsToRisk"
               value={pointsToRisk}
               onChange={handleChange}
+              row
             >
               {points.map((option) => (
                 <FormControlLabel
                   value={option.value}
                   control={<Radio />}
-                  label={option.value}
+                  label={option.label}
                   key={option.value}
                 />
               ))}
             </RadioGroup>
           </FormControl>
-          <Button
-            onClick={() => handlePointsToRisk(pointsToRisk)}
-            fullWidth
-            color="primary"
-            style={{ maxWidth: "100%" }}
-          >
-            START GAME
-          </Button>
+          <Grid container>
+            <Grid item xs={6}>
+              <Button
+                onClick={() => handlePointsToRisk(pointsToRisk)}
+                fullWidth
+                color="primary"
+                style={{ maxWidth: "100%" }}
+              >
+                START GAME
+              </Button>
+            </Grid>
+            <Grid item xs={6}>
+              <Link to="/main">
+                <Button fullWidth color="primary" style={{ maxWidth: "100%" }}>
+                  RETURN TO MAIN SCREEN
+                </Button>
+              </Link>
+            </Grid>
+          </Grid>
         </form>
       </Grid>
     </Grid>

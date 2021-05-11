@@ -52,4 +52,13 @@ const trivia = async () => {
   }
 };
 
-export { trivia };
+const userData = () => {
+  try {
+    let score = { score: 10 };
+    return score;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export { trivia, userData };

@@ -1,83 +1,58 @@
-import React, { useState, useEffect } from "react";
-import { CircularProgress, Grid } from "@material-ui/core";
+import React, { useEffect, useState } from "react";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
 import "./App.css";
-import { RiskPoints, Score, Questionaire } from "./components/index";
-import { trivia } from "./api/requests";
+import { Game, MainScreen, SignIn } from "./components/index";
+import { userData } from "./api/requests";
 
-function App() {
-  const [question, setQuestion] = useState({});
-  const [loading, setLoading] = useState(true);
+const App = () => {
   const [score, setScore] = useState(0);
-  const [gameEnded, setGameEnded] = useState(false);
-  const [startGame, setStartGame] = useState(false);
-  const [pointsToRisk, setPointsToRisk] = useState("0");
-  const [won, setWon] = useState(false);
+  const [tournaments, setTournaments] = useState([]);
+  const [login, setLogin] = useState(false);
 
   useEffect(() => {
-    async function fetchData() {
-      await trivia()
-        .then((response) => {
-          setQuestion(response[0]);
-        })
-        .then(() => {
-          setLoading(false);
-        });
-    }
-    fetchData();
+    setTournaments([
+      {
+        score: 129,
+        positioning: "13 / 112",
+        remainingDays: "12",
+      },
+      {
+        score: 7,
+        positioning: "90 / 145",
+        remainingDays: "2",
+      },
+      {
+        score: 20,
+        positioning: "2 / 105",
+        remainingDays: "14",
+      },
+    ]);
   }, []);
 
-  const handleAnswer = (selected) => {
-    if (selected === question.correct) {
-      setWon(true);
-      console.log("You did it!");
-      if (pointsToRisk === "2") setScore(score + 6);
-      if (pointsToRisk === "1") setScore(score + 4);
-      if (pointsToRisk === "0") setScore(score + 1);
-    } else {
-      if (score !== 0) setScore(score - 1);
-      setWon(false);
-      console.log("You suck!");
-    }
-    setGameEnded(true);
-  };
-
-  const handlePointsToRisk = (pointsToRisk) => {
-    setPointsToRisk(pointsToRisk);
-    setStartGame(true);
-  };
-
-  const handlePlayAgain = () => {
-    setQuestion({});
-    setGameEnded(false);
-    setStartGame(false);
-    setWon(false);
+  const handleLogin = (data) => {
+    console.log(data);
+    setLogin(true);
   };
 
   return (
-    <Grid
-      container
-      spacing={0}
-      direction="column"
-      alignItems="center"
-      justify="center"
-      style={{ minHeight: "100vh" }}
-    >
-      {gameEnded ? (
-        <Score
-          score={score}
-          won={won}
-          handlePlayAgain={handlePlayAgain}
-          correctAnswer={question.correct}
-        />
-      ) : !loading && startGame ? (
-        <Questionaire data={question} handleAnswer={handleAnswer} />
-      ) : !startGame ? (
-        <RiskPoints handlePointsToRisk={handlePointsToRisk} />
-      ) : (
-        <CircularProgress />
-      )}
-    </Grid>
+    <Router>
+      <Switch>
+        <Route exact path="/sign-in">
+          <SignIn handleLogin={handleLogin} />
+        </Route>
+        {login && (
+          <>
+            <Route exact path="/main">
+              <MainScreen tournaments={tournaments} />
+            </Route>
+            <Route path="/game">
+              <Game />
+            </Route>
+          </>
+        )}
+      </Switch>
+    </Router>
   );
-}
+};
 
 export default App;
