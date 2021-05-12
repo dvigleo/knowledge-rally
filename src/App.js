@@ -1,33 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import { observer } from "mobx-react-lite";
 import "./App.css";
 import { Game, MainScreen, SignIn } from "./components/index";
-import { userData } from "./api/requests";
 
 const App = () => {
-  const [score, setScore] = useState(0);
-  const [tournaments, setTournaments] = useState([]);
   const [login, setLogin] = useState(false);
 
-  useEffect(() => {
-    setTournaments([
-      {
-        score: 129,
-        positioning: "13 / 112",
-        remainingDays: "12",
-      },
-      {
-        score: 7,
-        positioning: "90 / 145",
-        remainingDays: "2",
-      },
-      {
-        score: 20,
-        positioning: "2 / 105",
-        remainingDays: "14",
-      },
-    ]);
-  }, []);
+  useEffect(() => {}, []);
 
   const handleLogin = (data) => {
     console.log(data);
@@ -37,22 +17,15 @@ const App = () => {
   return (
     <Router>
       <Switch>
-        <Route exact path="/sign-in">
+        {/* <Route exact path="/">
           <SignIn handleLogin={handleLogin} />
-        </Route>
-        {login && (
-          <>
-            <Route exact path="/main">
-              <MainScreen tournaments={tournaments} />
-            </Route>
-            <Route path="/game">
-              <Game />
-            </Route>
-          </>
-        )}
+        </Route> */}
+        {/* {login && ( */}
+        <Route exact path="/main" component={MainScreen} />
+        <Route path="/game" component={Game} />
       </Switch>
     </Router>
   );
 };
 
-export default App;
+export default observer(App);

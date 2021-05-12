@@ -1,7 +1,8 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import UserStore from "../stores/user-store";
 import kr from "../assets/images/knowledge-rally.png";
-import { makeStyles, useTheme } from "@material-ui/core/styles";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -40,9 +41,12 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const MainScreen = ({ tournaments }) => {
+const MainScreen = () => {
   const classes = useStyles();
-  const theme = useTheme();
+
+  const userStore = useContext(UserStore);
+  const { tournaments } = userStore;
+
   return (
     <>
       <Grid
@@ -66,7 +70,7 @@ const MainScreen = ({ tournaments }) => {
           }}
         >
           <Grid container justify="center" style={{ marginTop: "20px" }}>
-            <img src={kr} />
+            <img src={kr} alt="Knowledge-rally Logo" />
           </Grid>
           <br></br>
           <Grid
@@ -106,6 +110,7 @@ const MainScreen = ({ tournaments }) => {
                   pathname: "/game",
                   state: {
                     score: tournament.score,
+                    tournamentId: tournament.tournamentId,
                   },
                 }}
               >

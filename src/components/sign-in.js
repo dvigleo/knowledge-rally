@@ -39,7 +39,7 @@ const SignIn = ({ handleLogin }) => {
           }}
         >
           <Grid container justify="center" style={{ marginTop: "20px" }}>
-            <img src={kr} />
+            <img src={kr} alt="Knowledge-rally Logo" /> />
           </Grid>
           <br></br>
           <Grid

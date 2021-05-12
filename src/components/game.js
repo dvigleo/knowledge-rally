@@ -1,37 +1,45 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { useHistory, useLocation } from "react-router-dom";
 import { CircularProgress, Grid } from "@material-ui/core";
 import { RiskPoints, Score, Questionaire } from "./index";
-import { trivia } from "../api/requests";
+import { observer } from "mobx-react-lite";
+import QuestionStore from "../stores/question-store";
+import UserStore from "../stores/user-store";
 
 const Game = () => {
-  const [question, setQuestion] = useState({});
+  const history = useHistory();
+  const location = useLocation();
+
   const [loading, setLoading] = useState(true);
-  const [score, setScore] = useState();
   const [gameEnded, setGameEnded] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const [pointsToRisk, setPointsToRisk] = useState("0");
   const [won, setWon] = useState(false);
-  const history = useHistory();
 
-  const handleRedirect = () => {
-    history.push("/main");
-  };
+  const questionStore = useContext(QuestionStore);
+  const userStore = useContext(UserStore);
+  const [score, setScore] = useState();
+  const [tournamentId, setTournamentId] = useState();
 
-  const location = useLocation();
   useEffect(() => {
-    async function fetchData() {
-      await trivia()
-        .then((response) => {
-          setQuestion(response[0]);
-        })
-        .then(() => {
-          setScore(location.state?.score);
-          setLoading(false);
-        });
-    }
-    fetchData();
-  }, [location.state?.score]);
+    questionStore.getQuestion().then(() => {
+      setLoading(false);
+      setScore(location.state?.score);
+      setTournamentId(location.state?.tournamentId);
+    });
+  }, [
+    location.state?.score,
+    location.state?.tournamentId,
+    questionStore,
+    userStore,
+  ]);
+
+  const { question } = questionStore;
+
+  const handlePointsToRisk = (pointsToRisk) => {
+    setPointsToRisk(pointsToRisk);
+    setStartGame(true);
+  };
 
   const handleAnswer = (selected) => {
     if (selected === question.correct) {
@@ -50,14 +58,9 @@ const Game = () => {
     setGameEnded(true);
   };
 
-  const handlePointsToRisk = (pointsToRisk) => {
-    setPointsToRisk(pointsToRisk);
-    setStartGame(true);
-  };
-
   const handleReturnToMain = () => {
-    console.log("This is where we return to the main screen");
-    handleRedirect();
+    userStore.updateUserScore(tournamentId, score);
+    history.push("/main");
   };
 
   return (
@@ -89,4 +92,4 @@ const Game = () => {
   );
 };
 
-export default Game;
+export default observer(Game);

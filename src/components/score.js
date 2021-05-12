@@ -33,7 +33,7 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
             </Grid>
             <Grid item xs={12}>
               <Typography variant="h6" align="center">
-                The correct answer was:{" "}
+                The correct answer was:
                 <Typography
                   variant="h6"
                   align="center"
@@ -64,7 +64,6 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
             fullWidth
             color="primary"
             style={{ maxWidth: "100%" }}
-            // disabled={true}
           >
             RETURN TO MENU
           </Button>
