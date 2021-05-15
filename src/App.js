@@ -1,31 +1,23 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { observer } from "mobx-react-lite";
-import "./App.css";
-import { Game, MainScreen, SignIn } from "./components/index";
+import React from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import './App.css';
+import { Game, MainScreen } from './components/index';
+import Amplify, { Auth } from 'aws-amplify';
+import awsconfig from './aws-exports';
+import { withAuthenticator } from '@aws-amplify/ui-react';
+Amplify.configure(awsconfig);
+Auth.configure(awsconfig);
 
 const App = () => {
-  const [login, setLogin] = useState(false);
-
-  useEffect(() => {}, []);
-
-  const handleLogin = (data) => {
-    console.log(data);
-    setLogin(true);
-  };
-
   return (
     <Router>
       <Switch>
-        {/* <Route exact path="/">
-          <SignIn handleLogin={handleLogin} />
-        </Route> */}
-        {/* {login && ( */}
-        <Route exact path="/main" component={MainScreen} />
+        <Route exact path="/" component={MainScreen} />
         <Route path="/game" component={Game} />
       </Switch>
     </Router>
   );
 };
 
-export default observer(App);
+export default withAuthenticator(observer(App));

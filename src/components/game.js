@@ -60,7 +60,7 @@ const Game = () => {
 
   const handleReturnToMain = () => {
     userStore.updateUserScore(tournamentId, score);
-    history.push("/main");
+    history.push("/");
   };
 
   return (
