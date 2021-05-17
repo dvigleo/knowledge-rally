@@ -83,7 +83,7 @@ const RiskPoints = ({ handlePointsToRisk }) => {
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Link to="/">
+              <Link to="/main">
                 <Button fullWidth color="primary" style={{ maxWidth: "100%" }}>
                   RETURN TO MAIN SCREEN
                 </Button>

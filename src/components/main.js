@@ -1,8 +1,8 @@
-import React, { useContext } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
-import UserStore from '../stores/user-store';
-import kr from '../assets/images/knowledge-rally.png';
-import { Link } from 'react-router-dom';
+import React, { useContext } from "react";
+import { makeStyles } from "@material-ui/core/styles";
+import UserStore from "../stores/user-store";
+import kr from "../assets/images/knowledge-rally.png";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
@@ -11,34 +11,33 @@ import {
   Button,
   Grid,
   IconButton,
-} from '@material-ui/core';
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
+} from "@material-ui/core";
+import PlayArrowIcon from "@material-ui/icons/PlayArrow";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles((theme) => ({
   root: {
-    display: 'flex',
-    marginBottom: '10px',
-    marginTop: '10px',
+    display: "flex",
+    marginBottom: "10px",
+    marginTop: "10px",
   },
   details: {
-    display: 'flex',
-    flexDirection: 'column',
+    display: "flex",
+    flexDirection: "column",
   },
   content: {
-    flex: '1 0 auto',
+    flex: "1 0 auto",
   },
   controls: {
-    display: 'flex',
-    alignItems: 'center',
+    display: "flex",
+    alignItems: "center",
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
   playIcon: {
-    paddingLeft: '10px',
+    paddingLeft: "10px",
     height: 38,
     width: 38,
-    paddingTop: '35px',
+    paddingTop: "35px",
   },
 }));
 
@@ -57,29 +56,28 @@ const MainScreen = () => {
         alignItems="center"
         justify="center"
         style={{
-          padding: '60px 90px',
-          minHeight: '100vh',
+          padding: "60px 90px",
+          minHeight: "100vh",
         }}
       >
         <Grid
           item
           lg={12}
           style={{
-            backgroundColor: 'white',
-            padding: '100px 100px',
-            boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
+            backgroundColor: "white",
+            padding: "100px 100px",
+            boxShadow: "0 3px 5px 2px rgba(115, 112, 111, .3)",
           }}
         >
-          <AmplifySignOut />
-          <Grid container justify="center" style={{ marginTop: '20px' }}>
+          <Grid container justify="center" style={{ marginTop: "20px" }}>
             <img src={kr} alt="Knowledge-rally Logo" />
           </Grid>
           <br></br>
           <Grid
             container
             style={{
-              marginTop: '20px',
-              marginBottom: '20px',
+              marginTop: "20px",
+              marginBottom: "20px",
             }}
           >
             <Typography variant="h3" style={{ fontWeight: 600 }}>
@@ -109,7 +107,7 @@ const MainScreen = () => {
               </div>
               <Link
                 to={{
-                  pathname: '/game',
+                  pathname: "/game",
                   state: {
                     score: tournament.score,
                     tournamentId: tournament.tournamentId,
@@ -118,7 +116,7 @@ const MainScreen = () => {
               >
                 <IconButton
                   aria-label="play"
-                  onClick={() => console.log('Pressed!!')}
+                  onClick={() => console.log("Pressed!!")}
                 >
                   <PlayArrowIcon className={classes.playIcon} />
                 </IconButton>
