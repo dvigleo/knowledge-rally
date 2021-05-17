@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState } from 'react';
 import {
   FormControl,
   RadioGroup,
@@ -8,38 +8,38 @@ import {
   Radio,
   Divider,
   Grid,
-} from "@material-ui/core";
-import { Link } from "react-router-dom";
+} from '@material-ui/core';
+import { Link } from 'react-router-dom';
 
 const points = [
   {
-    value: "0",
-    label: "0 points",
+    value: '0',
+    label: '0 points',
   },
   {
-    value: "1",
-    label: "1 point",
+    value: '1',
+    label: '1 point',
   },
   {
-    value: "2",
-    label: "2 points",
+    value: '2',
+    label: '2 points',
   },
 ];
 
 const containerStyle = {
-  background: "white",
-  boxShadow: "0 3px 5px 2px rgba(115, 112, 111, .3)",
+  background: 'white',
+  boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
   border: 0,
-  color: "black",
-  marginBottom: "20px",
-  padding: "20px 20px",
-  width: "100vh",
+  color: 'black',
+  marginBottom: '20px',
+  padding: '20px 20px',
+  width: '100vh',
 };
 
 const RiskPoints = ({ handlePointsToRisk }) => {
-  const [pointsToRisk, setPointsToRisk] = useState("0");
+  const [pointsToRisk, setPointsToRisk] = useState('0');
 
-  const handleChange = (event) => {
+  const handleChange = event => {
     setPointsToRisk(event.target.value);
   };
 
@@ -61,7 +61,7 @@ const RiskPoints = ({ handlePointsToRisk }) => {
               onChange={handleChange}
               row
             >
-              {points.map((option) => (
+              {points.map(option => (
                 <FormControlLabel
                   value={option.value}
                   control={<Radio />}
@@ -77,14 +77,14 @@ const RiskPoints = ({ handlePointsToRisk }) => {
                 onClick={() => handlePointsToRisk(pointsToRisk)}
                 fullWidth
                 color="primary"
-                style={{ maxWidth: "100%" }}
+                style={{ maxWidth: '100%' }}
               >
                 START GAME
               </Button>
             </Grid>
             <Grid item xs={6}>
-              <Link to="/main">
-                <Button fullWidth color="primary" style={{ maxWidth: "100%" }}>
+              <Link to="/">
+                <Button fullWidth color="primary" style={{ maxWidth: '100%' }}>
                   RETURN TO MAIN SCREEN
                 </Button>
               </Link>

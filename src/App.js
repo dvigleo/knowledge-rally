@@ -1,15 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
-import { observer } from "mobx-react-lite";
-import "./App.css";
-import { Game, MainScreen, SignIn } from "./components/index";
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import './App.css';
+import { Game, MainScreen, SignIn } from './components/index';
 
 const App = () => {
   const [login, setLogin] = useState(false);
 
   useEffect(() => {}, []);
 
-  const handleLogin = (data) => {
+  const handleLogin = data => {
     console.log(data);
     setLogin(true);
   };
@@ -21,7 +21,7 @@ const App = () => {
           <SignIn handleLogin={handleLogin} />
         </Route> */}
         {/* {login && ( */}
-        <Route exact path="/main" component={MainScreen} />
+        <Route exact path="/" component={MainScreen} />
         <Route path="/game" component={Game} />
       </Switch>
     </Router>
