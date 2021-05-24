@@ -8,22 +8,22 @@ class UserStore {
     makeAutoObservable(this);
   }
 
-  tournaments = [];
+  activeTournaments = [];
   username = '';
 
   updateUserScore = async (tournamentId, score) => {
     console.log(tournamentId, score);
-    let updatedTournaments = this.tournaments.map(t =>
+    let updatedTournaments = this.activeTournaments.map(t =>
       t.tournamentId === tournamentId ? { ...t, score: score } : toJS(t)
     );
     // console.log('RECENTLY UPDATED, ', toJS(updatedTournaments));
     try {
       await requests.updateUserData({
-        tournaments: [...updatedTournaments],
+        activeTournaments: [...updatedTournaments],
         id: this.username,
       });
-      this.tournaments = toJS(updatedTournaments);
-      // console.log('FROM USERSTORE', toJS(this.tournaments));
+      this.activeTournaments = toJS(updatedTournaments);
+      // console.log('FROM USERSTORE', toJS(this.activeTournaments));
     } catch (err) {
       console.log('There was an error updating the user score ', err);
     }
@@ -36,16 +36,19 @@ class UserStore {
       console.log(this.username);
       let userData = await requests.getUserData(this.username);
       if (userData.body.tournaments.length > 0) {
-        this.tournaments = toJS(userData.body.tournaments);
+        this.activeTournaments = toJS(userData.body.tournaments);
       }
-      // console.log('FROM DB: ', toJS(this.tournaments));
+      // console.log('FROM DB: ', toJS(this.activeTournaments));
     } catch (err) {
       console.log('There was a problem retrieving the user data ', err);
     }
   };
 
-  cleanUpUserdata = () => {
-    this.tournaments = [];
+  joinTournament = async tournamentId => {
+    let user = await Auth.currentAuthenticatedUser();
+    this.username = user.username;
+    console.log(tournamentId);
+    await requests.joinTournament(tournamentId, this.username);
   };
 }
 

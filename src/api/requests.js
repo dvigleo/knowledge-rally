@@ -12,6 +12,8 @@ const requests = {
         tournaments: body.tournaments,
       },
     }),
+  joinTournament: body =>
+    console.log('user will be joined to a tournament here'),
 };
 
 export default requests;

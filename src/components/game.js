@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { CircularProgress, Grid } from '@material-ui/core';
-import { RiskPoints, Score, Questionaire } from './index';
+import { CircularProgress } from '@material-ui/core';
+import { RiskPoints, Score, Questionaire, Hero } from './index';
 import { observer } from 'mobx-react-lite';
 import QuestionStore from '../stores/question-store';
 import UserStore from '../stores/user-store';
@@ -67,32 +67,21 @@ const Game = () => {
 
   return (
     <>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{
-          padding: '60px 90px',
-          minHeight: '100vh',
-        }}
-      >
-        {gameEnded ? (
-          <Score
-            score={score}
-            won={won}
-            handleReturnToMain={handleReturnToMain}
-            correctAnswer={question.correct}
-          />
-        ) : !loading && startGame ? (
-          <Questionaire data={question} handleAnswer={handleAnswer} />
-        ) : !startGame ? (
-          <RiskPoints handlePointsToRisk={handlePointsToRisk} />
-        ) : (
-          <CircularProgress />
-        )}
-      </Grid>
+      <Hero />
+      {gameEnded ? (
+        <Score
+          score={score}
+          won={won}
+          handleReturnToMain={handleReturnToMain}
+          correctAnswer={question.correct}
+        />
+      ) : !loading && startGame ? (
+        <Questionaire data={question} handleAnswer={handleAnswer} />
+      ) : !startGame ? (
+        <RiskPoints handlePointsToRisk={handlePointsToRisk} />
+      ) : (
+        <CircularProgress />
+      )}
     </>
   );
 };

@@ -93,7 +93,6 @@ app.put('/tournaments/:id', function (request, response) {
     Item: {
       id: request.params.id,
       tournaments: request.body['tournaments'],
-      // userId: request.body['userId'],
     },
   };
 

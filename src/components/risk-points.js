@@ -6,8 +6,8 @@ import {
   Typography,
   Button,
   Radio,
-  Divider,
   Grid,
+  Container,
 } from '@material-ui/core';
 import { Link } from 'react-router-dom';
 
@@ -26,16 +26,6 @@ const points = [
   },
 ];
 
-const containerStyle = {
-  background: 'white',
-  boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
-  border: 0,
-  color: 'black',
-  marginBottom: '20px',
-  padding: '20px 20px',
-  width: '100vh',
-};
-
 const RiskPoints = ({ handlePointsToRisk }) => {
   const [pointsToRisk, setPointsToRisk] = useState('0');
 
@@ -44,55 +34,53 @@ const RiskPoints = ({ handlePointsToRisk }) => {
   };
 
   return (
-    <Grid item xs={8} style={containerStyle}>
-      <Grid container justify="center">
+    <>
+      <Container maxWidth="md">
         <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
-          Select the points to risk
+          Select the points to risk for the next question
         </Typography>
-      </Grid>
-      <Divider />
-      <Grid container justify="center">
-        <form>
-          <FormControl component="fieldset" fullWidth={true}>
-            <RadioGroup
-              aria-label="pointsToRisk"
-              name="pointsToRisk"
-              value={pointsToRisk}
-              onChange={handleChange}
-              row
-            >
-              {points.map(option => (
-                <FormControlLabel
-                  value={option.value}
-                  control={<Radio />}
-                  label={option.label}
-                  key={option.value}
-                />
-              ))}
-            </RadioGroup>
-          </FormControl>
-          <Grid container>
-            <Grid item xs={6}>
-              <Link to="/">
-                <Button fullWidth color="primary" style={{ maxWidth: '100%' }}>
-                  RETURN TO MAIN SCREEN
-                </Button>
-              </Link>
-            </Grid>
-            <Grid item xs={6}>
-              <Button
-                onClick={() => handlePointsToRisk(pointsToRisk)}
-                fullWidth
-                color="primary"
-                style={{ maxWidth: '100%' }}
+        <Grid container justify="center" alignItems="center">
+          <form>
+            <FormControl component="fieldset" fullWidth={true}>
+              <RadioGroup
+                aria-label="pointsToRisk"
+                name="pointsToRisk"
+                value={pointsToRisk}
+                onChange={handleChange}
+                row
               >
-                START GAME
-              </Button>
+                {points.map(option => (
+                  <FormControlLabel
+                    value={option.value}
+                    control={<Radio />}
+                    label={option.label}
+                    key={option.value}
+                  />
+                ))}
+              </RadioGroup>
+            </FormControl>
+            <Grid container>
+              <Grid item xs={6}>
+                <Link to="/">
+                  <Button fullWidth color="primary">
+                    RETURN TO MAIN SCREEN
+                  </Button>
+                </Link>
+              </Grid>
+              <Grid item xs={6}>
+                <Button
+                  onClick={() => handlePointsToRisk(pointsToRisk)}
+                  fullWidth
+                  color="primary"
+                >
+                  START GAME
+                </Button>
+              </Grid>
             </Grid>
-          </Grid>
-        </form>
-      </Grid>
-    </Grid>
+          </form>
+        </Grid>
+      </Container>
+    </>
   );
 };
 

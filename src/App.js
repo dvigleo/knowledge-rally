@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import './App.css';
-import { Game, MainScreen } from './components/index';
+import { Game, MainScreen, Tournaments } from './components/index';
 import Amplify from 'aws-amplify';
 import { withAuthenticator } from '@aws-amplify/ui-react';
 import config from './aws-exports';
@@ -14,6 +14,7 @@ const App = () => {
       <Switch>
         <Route exact path="/" component={MainScreen} />
         <Route path="/game" component={Game} />
+        <Route path="/tournaments" component={Tournaments} />
       </Switch>
     </Router>
   );

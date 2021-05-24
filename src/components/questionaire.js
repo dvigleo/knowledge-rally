@@ -1,5 +1,5 @@
 import React from 'react';
-import { Typography, Button, Grid } from '@material-ui/core';
+import { Typography, Button, Grid, Container } from '@material-ui/core';
 
 const questionStyle = {
   background: 'white',
@@ -14,7 +14,7 @@ const buttonStyle = {
   backgroundColor: 'white',
   color: 'black',
   padding: '20px',
-  fontWeight: 600,
+  fontWeight: 500,
   width: '100%',
   boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
 };
@@ -27,14 +27,23 @@ const Questionaire = ({
 
   console.log('correct: ', correct);
   return (
-    <Grid item xs={8}>
-      <Grid container justify="center" style={questionStyle}>
-        <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
-          {question}
-        </Typography>
-        <Typography variant="h5" align="justify">
-          Category: {category}
-        </Typography>
+    <Container maxWidth="md">
+      <Grid
+        container
+        justify="center"
+        alignItems="center"
+        style={questionStyle}
+      >
+        <Grid item xs={12}>
+          <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
+            {question}
+          </Typography>
+        </Grid>
+        <Grid item xs={12} style={{ padding: '10px' }}>
+          <Typography variant="subtitle1" align="center">
+            Category: {category}
+          </Typography>
+        </Grid>
       </Grid>
       <Grid container spacing={4}>
         {shuffledAnswers.map((answer, key) => (
@@ -49,7 +58,7 @@ const Questionaire = ({
           </Grid>
         ))}
       </Grid>
-    </Grid>
+    </Container>
   );
 };
 
