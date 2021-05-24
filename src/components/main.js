@@ -1,8 +1,8 @@
-import React, { useContext } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import UserStore from "../stores/user-store";
-import kr from "../assets/images/knowledge-rally.png";
-import { Link } from "react-router-dom";
+import React, { useContext, useEffect, useState } from 'react';
+import { makeStyles } from '@material-ui/core/styles';
+import UserStore from '../stores/user-store';
+import kr from '../assets/images/knowledge-rally.png';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -11,33 +11,35 @@ import {
   Button,
   Grid,
   IconButton,
-} from "@material-ui/core";
-import PlayArrowIcon from "@material-ui/icons/PlayArrow";
+  CircularProgress,
+} from '@material-ui/core';
+import PlayArrowIcon from '@material-ui/icons/PlayArrow';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    display: "flex",
-    marginBottom: "10px",
-    marginTop: "10px",
+    display: 'flex',
+    marginBottom: '10px',
+    marginTop: '10px',
   },
   details: {
-    display: "flex",
-    flexDirection: "column",
+    display: 'flex',
+    flexDirection: 'column',
   },
   content: {
-    flex: "1 0 auto",
+    flex: '1 0 auto',
   },
   controls: {
-    display: "flex",
-    alignItems: "center",
+    display: 'flex',
+    alignItems: 'center',
     paddingLeft: theme.spacing(1),
     paddingBottom: theme.spacing(1),
   },
   playIcon: {
-    paddingLeft: "10px",
+    paddingLeft: '10px',
     height: 38,
     width: 38,
-    paddingTop: "35px",
+    paddingTop: '35px',
   },
 }));
 
@@ -46,6 +48,13 @@ const MainScreen = () => {
 
   const userStore = useContext(UserStore);
   const { tournaments } = userStore;
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    userStore.getUserTournaments().then(() => {
+      setLoading(false);
+    });
+  }, [userStore]);
 
   return (
     <>
@@ -56,74 +65,87 @@ const MainScreen = () => {
         alignItems="center"
         justify="center"
         style={{
-          padding: "60px 90px",
-          minHeight: "100vh",
+          padding: '60px 90px',
+          minHeight: '100vh',
         }}
       >
-        <Grid
-          item
-          lg={12}
-          style={{
-            backgroundColor: "white",
-            padding: "100px 100px",
-            boxShadow: "0 3px 5px 2px rgba(115, 112, 111, .3)",
-          }}
-        >
-          <Grid container justify="center" style={{ marginTop: "20px" }}>
-            <img src={kr} alt="Knowledge-rally Logo" />
-          </Grid>
-          <br></br>
+        {!loading ? (
           <Grid
-            container
+            item
+            lg={12}
             style={{
-              marginTop: "20px",
-              marginBottom: "20px",
+              backgroundColor: 'white',
+              padding: '100px 100px',
+              boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
             }}
           >
-            <Typography variant="h3" style={{ fontWeight: 600 }}>
-              Active Tournaments
-              <Divider />
-            </Typography>
+            <Grid
+              container
+              justify="center"
+              style={{ marginTop: '20px', marginBottom: '20px' }}
+            >
+              <img src={kr} alt="Knowledge-rally Logo" />
+            </Grid>
+            <AmplifySignOut />
+            <Grid
+              container
+              style={{
+                marginTop: '20px',
+                marginBottom: '20px',
+              }}
+            >
+              <Typography variant="h3" style={{ fontWeight: 600 }}>
+                Active Tournaments
+                <Divider />
+              </Typography>
+            </Grid>
+            <Grid container justify="flex-end">
+              <Button disabled={true} key="new-tournament" variant="contained">
+                Join new tournament
+              </Button>
+            </Grid>
+            {tournaments.length > 0 ? (
+              tournaments.map((tournament, key) => (
+                <Card className={classes.root} key={key}>
+                  <div className={classes.details}>
+                    <CardContent className={classes.content}>
+                      <Typography component="h5" variant="h5">
+                        Score: {tournament.score}
+                      </Typography>
+                      <Typography variant="subtitle1" color="textSecondary">
+                        Positioning: {tournament.positioning} players
+                      </Typography>
+                      <Typography variant="subtitle2" color="textSecondary">
+                        Remaining days: {tournament.remainingDays}
+                      </Typography>
+                    </CardContent>
+                  </div>
+                  <Link
+                    to={{
+                      pathname: '/game',
+                      state: {
+                        score: tournament.score,
+                        tournamentId: tournament.tournamentId,
+                      },
+                    }}
+                  >
+                    <IconButton aria-label="play">
+                      <PlayArrowIcon className={classes.playIcon} />
+                    </IconButton>
+                  </Link>
+                </Card>
+              ))
+            ) : (
+              <Grid container justify="center">
+                <Typography component="h5" variant="h5">
+                  Join a new tournament to start playing!
+                </Typography>
+              </Grid>
+            )}
           </Grid>
-          <Grid container justify="flex-end">
-            <Button disabled={true} key="new-tournament" variant="contained">
-              Join new tournament
-            </Button>
-          </Grid>
-          {tournaments.map((tournament, key) => (
-            <Card className={classes.root} key={key}>
-              <div className={classes.details}>
-                <CardContent className={classes.content}>
-                  <Typography component="h5" variant="h5">
-                    Score: {tournament.score}
-                  </Typography>
-                  <Typography variant="subtitle1" color="textSecondary">
-                    Positioning: {tournament.positioning} players
-                  </Typography>
-                  <Typography variant="subtitle2" color="textSecondary">
-                    Remaining days: {tournament.remainingDays}
-                  </Typography>
-                </CardContent>
-              </div>
-              <Link
-                to={{
-                  pathname: "/game",
-                  state: {
-                    score: tournament.score,
-                    tournamentId: tournament.tournamentId,
-                  },
-                }}
-              >
-                <IconButton
-                  aria-label="play"
-                  onClick={() => console.log("Pressed!!")}
-                >
-                  <PlayArrowIcon className={classes.playIcon} />
-                </IconButton>
-              </Link>
-            </Card>
-          ))}
-        </Grid>
+        ) : (
+          <CircularProgress />
+        )}
       </Grid>
     </>
   );

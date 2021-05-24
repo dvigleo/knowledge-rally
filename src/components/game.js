@@ -46,20 +46,22 @@ const Game = () => {
       setWon(true);
       console.log('You did it!');
       if (pointsToRisk === '2') setScore(score + 6);
-      if (pointsToRisk === '1') setScore(score + 4);
-      if (pointsToRisk === '0') setScore(score + 1);
+      else if (pointsToRisk === '1') setScore(score + 4);
+      else if (pointsToRisk === '0') setScore(score + 1);
+      else setScore(score);
     } else {
-      if (pointsToRisk === '2') setScore(score - 2);
-      if (pointsToRisk === '1') setScore(score - 1);
-      if (pointsToRisk === '0') setScore(score);
       setWon(false);
       console.log('You suck!');
+      if (pointsToRisk === '2') setScore(score - 2);
+      else if (pointsToRisk === '1') setScore(score - 1);
+      else if (pointsToRisk === '0') setScore(score);
+      else setScore(score);
     }
     setGameEnded(true);
   };
 
-  const handleReturnToMain = () => {
-    userStore.updateUserScore(tournamentId, score);
+  const handleReturnToMain = async () => {
+    await userStore.updateUserScore(tournamentId, score);
     history.push('/');
   };
 
@@ -71,7 +73,10 @@ const Game = () => {
         direction="column"
         alignItems="center"
         justify="center"
-        style={{ padding: '60px 90px', minHeight: '100vh' }}
+        style={{
+          padding: '60px 90px',
+          minHeight: '100vh',
+        }}
       >
         {gameEnded ? (
           <Score

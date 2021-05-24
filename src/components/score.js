@@ -1,15 +1,15 @@
-import React from "react";
-import { Button, Divider, Grid, Typography } from "@material-ui/core";
+import React from 'react';
+import { Button, Divider, Grid, Typography } from '@material-ui/core';
 
 const containerStyle = {
-  background: "white",
-  boxShadow: "0 3px 5px 2px rgba(115, 112, 111, .3)",
+  background: 'white',
+  boxShadow: '0 3px 5px 2px rgba(115, 112, 111, .3)',
   border: 0,
-  color: "black",
-  marginBottom: "20px",
-  width: "100vh",
-  height: "40vh",
-  padding: "20px 20px",
+  color: 'black',
+  marginBottom: '20px',
+  width: '100vh',
+  height: '40vh',
+  padding: '20px 20px',
 };
 
 const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
@@ -32,12 +32,12 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
               </Typography>
             </Grid>
             <Grid item xs={12}>
-              <Typography variant="h6" align="center">
+              <Typography variant="h5" align="center">
                 The correct answer was:
                 <Typography
-                  variant="h6"
+                  variant="subtitle1"
                   align="center"
-                  style={{ fontWeight: 600, color: "green" }}
+                  style={{ fontWeight: 600, color: 'green' }}
                 >
                   {correctAnswer}
                 </Typography>
@@ -48,7 +48,7 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
       </Grid>
       <Divider />
       <Grid container>
-        <Grid item xs={12} style={{ marginTop: "15px" }}>
+        <Grid item xs={12} style={{ marginTop: '15px' }}>
           <Typography variant="h4" align="center">
             {score}
           </Typography>
@@ -63,7 +63,7 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
             onClick={handleReturnToMain}
             fullWidth
             color="primary"
-            style={{ maxWidth: "100%" }}
+            style={{ maxWidth: '100%' }}
           >
             RETURN TO MENU
           </Button>

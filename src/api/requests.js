@@ -1,13 +1,17 @@
-import axios from "axios";
+import axios from 'axios';
+import { API } from 'aws-amplify';
 
-const responseBody = (response) => response.data;
+const responseBody = response => response.data;
 
 const requests = {
-  getQuestion: () =>
-    axios
-      .get("https://opentdb.com/api.php?amount=1&type=multiple")
-      .then(responseBody),
-  getUserData: () => axios.get("").then(responseBody),
+  getQuestion: API_URL => axios.get(API_URL).then(responseBody),
+  getUserData: body => API.get('knowledgeRallyGameApi', `/tournaments/${body}`),
+  updateUserData: body =>
+    API.put('knowledgeRallyGameApi', `/tournaments/${body.id}`, {
+      body: {
+        tournaments: body.tournaments,
+      },
+    }),
 };
 
 export default requests;
