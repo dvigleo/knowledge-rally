@@ -15,7 +15,7 @@ AWS.config.update({ region: process.env.TABLE_REGION });
 
 const dynamodb = new AWS.DynamoDB.DocumentClient();
 
-let tableName = 'playersdb';
+let tableName = 'tournamentsdb';
 if (process.env.ENV && process.env.ENV !== 'NONE') {
   tableName = tableName + '-' + process.env.ENV;
 }
@@ -26,7 +26,7 @@ const partitionKeyType = 'S';
 const sortKeyName = '';
 const sortKeyType = '';
 const hasSortKey = sortKeyName !== '';
-const path = '/user';
+const path = '/tournaments';
 const UNAUTH = 'UNAUTH';
 const hashKeyPath = '/:' + partitionKeyName;
 const sortKeyPath = hasSortKey ? '/:' + sortKeyName : '';
@@ -52,26 +52,32 @@ const convertUrlType = (param, type) => {
   }
 };
 
-/*****************************************
- * HTTP Get method for get single object *
- *****************************************/
+/********************************
+ * HTTP Get method for list objects *
+ ********************************/
 
-app.get('/user/:id', function (request, response) {
-  let params = {
+app.get('/tournaments' + hashKeyPath, function (req, res) {
+  let queryParams = {
     TableName: tableName,
-    Key: {
-      id: request.params.id,
-    },
   };
-  dynamodb.get(params, (error, result) => {
-    if (error) {
-      response.json({ statusCode: 500, error: error.message });
+
+  dynamodb.scan(queryParams, (err, response) => {
+    if (err) {
+      res.json({
+        statusCode: 500,
+        error: err.message,
+        url: req.url,
+        tableName: tableName,
+        queryParams: queryParams,
+        response: response,
+      });
     } else {
-      response.json({
+      res.json({
         statusCode: 200,
-        url: request.url,
-        body: result.Item,
-        message: request.params.id,
+        url: req.url,
+        // body: response.Item,
+        queryParams: queryParams,
+        response: response,
       });
     }
   });
@@ -81,37 +87,22 @@ app.get('/user/:id', function (request, response) {
  * HTTP put method for insert object *
  *************************************/
 
-app.put('/user/:id', function (request, response) {
+app.put('/tournaments', function (req, res) {
   if (userIdPresent) {
-    request.body['userId'] =
-      request.apiGateway.event.requestContext.identity.cognitoIdentityId ||
-      UNAUTH;
+    req.body['userId'] =
+      req.apiGateway.event.requestContext.identity.cognitoIdentityId || UNAUTH;
   }
 
   let putItemParams = {
     TableName: tableName,
-    Item: {
-      id: request.params.id,
-      tournaments: request.body['tournaments'],
-    },
+    Item: req.body,
   };
-
   dynamodb.put(putItemParams, (err, data) => {
     if (err) {
-      response.statusCode = 500;
-      response.json({
-        error: err,
-        url: request.url,
-        body: request.body['tournaments'],
-        message: putItemParams,
-      });
+      res.statusCode = 500;
+      res.json({ error: err, url: req.url, body: req.body });
     } else {
-      response.json({
-        success: 'put call succeed!',
-        url: request.url,
-        data: data,
-        message: putItemParams,
-      });
+      res.json({ success: 'put call succeed!', url: req.url, data: data });
     }
   });
 });

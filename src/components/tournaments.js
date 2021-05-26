@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import UserStore from '../stores/user-store';
 import TournamentsStore from '../stores/tournaments-store';
+import UserStore from '../stores/user-store';
 import { Link } from 'react-router-dom';
 import {
   Card,
@@ -9,8 +9,8 @@ import {
   Typography,
   Grid,
   Container,
-  Button,
   CardActions,
+  Button,
   CircularProgress,
 } from '@material-ui/core';
 import { Hero } from './index';
@@ -29,60 +29,84 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   cardActions: {
-    flex: 'flex-end',
+    // flex: 'flex-end',
     paddingLeft: '10px',
   },
 }));
 
-const MainScreen = () => {
+const Tournaments = () => {
   const classes = useStyles();
-
-  const userStore = useContext(UserStore);
   const tournamentsStore = useContext(TournamentsStore);
-  const { enrolledTournaments } = userStore;
+  const { tournaments } = tournamentsStore;
+  const userStore = useContext(UserStore);
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    userStore.getUserTournaments().then(() => {
+    tournamentsStore.getTournaments().then(() => {
       tournamentsStore.getOpenTournaments().then(() => {
         setLoading(false);
       });
     });
-  }, [userStore, tournamentsStore]);
+    // tournamentsStore
+    //   .getOpenTournaments()
+    //   .then(tournamentsStore.getTournaments().then(setLoading(false)));
+    // tournamentsStore.getTournaments().then(
+    //   tournamentsStore.getOpenTournaments().then(() => {
+    //     setLoading(false);
+    //   })
+    // );
+  }, [tournamentsStore]);
+
+  const handleJoinTournament = (
+    tournamentId,
+    remainingDays,
+    playersEnrolled
+  ) => {
+    setLoading(true);
+    userStore
+      .joinTournament(tournamentId, remainingDays, playersEnrolled)
+      .then(tournamentsStore.enrollUser(tournamentId))
+      .then(() => {
+        setLoading(false);
+      });
+  };
 
   return (
     <>
-      <Hero joinTournament={true} />
+      <Hero joinTournament={false} />
       <Container maxWidth="md">
         {!loading ? (
           <Grid container spacing={4}>
-            {enrolledTournaments.length > 0 ? (
-              enrolledTournaments.map((tournament, key) => (
+            {tournaments.length > 0 ? (
+              tournaments.map((tournament, key) => (
                 <Grid item key={key} xs={12} sm={8} md={6}>
                   <Card className={classes.card}>
                     <div className={classes.details}>
                       <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h5" component="h2">
-                          Score: {tournament.score}
+                          Tournament #{tournament.id}
                         </Typography>
                         <Typography gutterBottom variant="h6" component="h2">
-                          Tournament #{tournament.tournamentId}
+                          Remaining days: {tournament.remainingDays}
                         </Typography>
-                        <Typography>Positioning: TBD</Typography>
                         <Typography>
-                          Remaining Days: {tournament.remainingDays}
+                          High Score: {tournament.highScore}
+                        </Typography>
+                        <Typography>
+                          Players enrolled: {tournament.playersEnrolled}
                         </Typography>
                       </CardContent>
                     </div>
-                    <div className={classes.cardActions}>
-                      <CardActions>
-                        <Grid container spacing={5}>
+                    <div>
+                      <CardActions className={classes.cardActions}>
+                        <Grid container spacing={8}>
                           <Grid item xs={6}>
                             <Link
                               to={{
                                 pathname: '/scoreboard',
                                 state: {
-                                  tournamentId: tournament.tournamentId,
+                                  tournamentId: tournament.id,
                                 },
                               }}
                             >
@@ -92,19 +116,19 @@ const MainScreen = () => {
                             </Link>
                           </Grid>
                           <Grid item xs={6}>
-                            <Link
-                              to={{
-                                pathname: '/game',
-                                state: {
-                                  score: tournament.score,
-                                  tournamentId: tournament.tournamentId,
-                                },
-                              }}
+                            <Button
+                              onClick={() =>
+                                handleJoinTournament(
+                                  tournament.id,
+                                  tournament.remainingDays,
+                                  tournament.playersEnrolled
+                                )
+                              }
+                              variant="contained"
+                              color="primary"
                             >
-                              <Button variant="contained" color="primary">
-                                PLAY TOURNAMENT
-                              </Button>
-                            </Link>
+                              JOIN TOURNAMENT
+                            </Button>
                           </Grid>
                         </Grid>
                       </CardActions>
@@ -120,7 +144,7 @@ const MainScreen = () => {
                     align="center"
                     style={{ fontWeight: 600 }}
                   >
-                    Click on the button to join a new tournament!
+                    There are no tournaments available.
                   </Typography>
                 </Grid>
               </Grid>
@@ -136,4 +160,4 @@ const MainScreen = () => {
   );
 };
 
-export default MainScreen;
+export default Tournaments;

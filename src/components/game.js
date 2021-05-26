@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
-import { CircularProgress, Grid } from '@material-ui/core';
-import { RiskPoints, Score, Questionaire } from './index';
+import { CircularProgress } from '@material-ui/core';
+import { RiskPoints, Score, Questionaire, Hero } from './index';
 import { observer } from 'mobx-react-lite';
 import QuestionStore from '../stores/question-store';
 import UserStore from '../stores/user-store';
+import TournamentsStore from '../stores/tournaments-store';
 
 const Game = () => {
   const history = useHistory();
@@ -14,10 +15,12 @@ const Game = () => {
   const [gameEnded, setGameEnded] = useState(false);
   const [startGame, setStartGame] = useState(false);
   const [pointsToRisk, setPointsToRisk] = useState('0');
+  const [pointsEarned, setPointsEarned] = useState(0);
   const [won, setWon] = useState(false);
 
   const questionStore = useContext(QuestionStore);
   const userStore = useContext(UserStore);
+  const tournamentsStore = useContext(TournamentsStore);
   const [score, setScore] = useState();
   const [tournamentId, setTournamentId] = useState();
 
@@ -44,55 +47,67 @@ const Game = () => {
   const handleAnswer = selected => {
     if (selected === question.correct) {
       setWon(true);
-      console.log('You did it!');
-      if (pointsToRisk === '2') setScore(score + 6);
-      else if (pointsToRisk === '1') setScore(score + 4);
-      else if (pointsToRisk === '0') setScore(score + 1);
-      else setScore(score);
+      if (pointsToRisk === '2') {
+        setScore(score + 6);
+        setPointsEarned(6);
+      } else if (pointsToRisk === '1') {
+        setScore(score + 4);
+        setPointsEarned(4);
+      } else if (pointsToRisk === '0') {
+        setScore(score + 1);
+        setPointsEarned(1);
+      } else setScore(score);
     } else {
       setWon(false);
-      console.log('You suck!');
-      if (pointsToRisk === '2') setScore(score - 2);
-      else if (pointsToRisk === '1') setScore(score - 1);
-      else if (pointsToRisk === '0') setScore(score);
-      else setScore(score);
+      if (pointsToRisk === '2') {
+        if (score <= 1) {
+          setScore(0);
+          setPointsEarned(0);
+        } else {
+          setScore(score - 2);
+          setPointsEarned(-2);
+        }
+      } else if (pointsToRisk === '1') {
+        if (score === 0) {
+          setScore(0);
+          setPointsEarned(0);
+        } else {
+          setScore(score - 1);
+          setPointsEarned(-1);
+        }
+      } else if (pointsToRisk === '0') {
+        setScore(score);
+        setPointsEarned(0);
+      } else setScore(score);
     }
     setGameEnded(true);
   };
 
   const handleReturnToMain = async () => {
-    await userStore.updateUserScore(tournamentId, score);
+    await userStore
+      .updateUserScore(tournamentId, score)
+      .then(tournamentsStore.updateTournamentData(tournamentId, score));
     history.push('/');
   };
 
   return (
     <>
-      <Grid
-        container
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        style={{
-          padding: '60px 90px',
-          minHeight: '100vh',
-        }}
-      >
-        {gameEnded ? (
-          <Score
-            score={score}
-            won={won}
-            handleReturnToMain={handleReturnToMain}
-            correctAnswer={question.correct}
-          />
-        ) : !loading && startGame ? (
-          <Questionaire data={question} handleAnswer={handleAnswer} />
-        ) : !startGame ? (
-          <RiskPoints handlePointsToRisk={handlePointsToRisk} />
-        ) : (
-          <CircularProgress />
-        )}
-      </Grid>
+      <Hero />
+      {gameEnded ? (
+        <Score
+          score={score}
+          won={won}
+          handleReturnToMain={handleReturnToMain}
+          correctAnswer={question.correct}
+          points={pointsEarned}
+        />
+      ) : !loading && startGame ? (
+        <Questionaire data={question} handleAnswer={handleAnswer} />
+      ) : !startGame ? (
+        <RiskPoints handlePointsToRisk={handlePointsToRisk} />
+      ) : (
+        <CircularProgress />
+      )}
     </>
   );
 };
