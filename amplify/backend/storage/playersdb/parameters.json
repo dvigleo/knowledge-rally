@@ -1,0 +1,5 @@
+{
+    "tableName": "playersdb",
+    "partitionKeyName": "id",
+    "partitionKeyType": "S"
+}

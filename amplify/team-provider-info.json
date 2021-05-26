@@ -1,0 +1,26 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-knowledgerallygame-dev-233558-authRole",
+      "UnauthRoleArn": "arn:aws:iam::867843072339:role/amplify-knowledgerallygame-dev-233558-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::867843072339:role/amplify-knowledgerallygame-dev-233558-authRole",
+      "Region": "us-east-2",
+      "DeploymentBucketName": "amplify-knowledgerallygame-dev-233558-deployment",
+      "UnauthRoleName": "amplify-knowledgerallygame-dev-233558-unauthRole",
+      "StackName": "amplify-knowledgerallygame-dev-233558",
+      "StackId": "arn:aws:cloudformation:us-east-2:867843072339:stack/amplify-knowledgerallygame-dev-233558/b8023820-b85b-11eb-a9cd-06d17e9ef01a",
+      "AmplifyAppId": "d2l75g4h7hbmvh"
+    },
+    "categories": {
+      "auth": {
+        "knowledgerallygame55611c5c": {}
+      },
+      "function": {
+        "knowledgeRallyGameFunction": {
+          "deploymentBucketName": "amplify-knowledgerallygame-dev-233558-deployment",
+          "s3Key": "amplify-builds/knowledgeRallyGameFunction-2f764d75435368616234-build.zip"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "paths": [
+    {
+      "name": "/tournaments",
+      "lambdaFunction": "knowledgeRallyGameFunction",
+      "privacy": {
+        "private": true,
+        "auth": [
+          "/POST",
+          "/GET",
+          "/PUT",
+          "/PATCH",
+          "/DELETE"
+        ]
+      },
+      "policyResourceName": "/tournaments"
+    }
+  ],
+  "resourceName": "knowledgeRallyGameApi",
+  "apiName": "knowledgeRallyGameApi",
+  "functionArns": [
+    {
+      "lambdaFunction": "knowledgeRallyGameFunction"
+    }
+  ],
+  "privacy": {
+    "auth": 1,
+    "unauth": 0,
+    "authRoleName": "amplify-knowledgerallygame-dev-233558-authRole",
+    "unAuthRoleName": "amplify-knowledgerallygame-dev-233558-unauthRole"
+  },
+  "dependsOn": [
+    {
+      "category": "function",
+      "resourceName": "knowledgeRallyGameFunction",
+      "attributes": [
+        "Name",
+        "Arn"
+      ]
+    }
+  ]
+}

@@ -73,6 +73,13 @@ const RiskPoints = ({ handlePointsToRisk }) => {
           </FormControl>
           <Grid container>
             <Grid item xs={6}>
+              <Link to="/">
+                <Button fullWidth color="primary" style={{ maxWidth: '100%' }}>
+                  RETURN TO MAIN SCREEN
+                </Button>
+              </Link>
+            </Grid>
+            <Grid item xs={6}>
               <Button
                 onClick={() => handlePointsToRisk(pointsToRisk)}
                 fullWidth
@@ -81,13 +88,6 @@ const RiskPoints = ({ handlePointsToRisk }) => {
               >
                 START GAME
               </Button>
-            </Grid>
-            <Grid item xs={6}>
-              <Link to="/">
-                <Button fullWidth color="primary" style={{ maxWidth: '100%' }}>
-                  RETURN TO MAIN SCREEN
-                </Button>
-              </Link>
             </Grid>
           </Grid>
         </form>
