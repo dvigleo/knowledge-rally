@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import UserStore from '../stores/user-store';
+import TournamentsStore from '../stores/tournaments-store';
 import { Link } from 'react-router-dom';
 import {
   Card,
@@ -8,6 +9,7 @@ import {
   Typography,
   Grid,
   Container,
+  Button,
   CardActions,
   CircularProgress,
 } from '@material-ui/core';
@@ -18,23 +20,17 @@ const useStyles = makeStyles(theme => ({
     display: 'flex',
     flex: 1,
   },
-  playButton: {
-    display: 'flex',
-    flex: 1,
-    justifyContent: 'flex-end',
-    paddingRight: theme.spacing(3),
-  },
-  cardGrid: {
-    paddingBottom: theme.spacing(8),
-  },
   card: {
     height: '100%',
-    width: '100%',
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
   cardContent: {
     flexGrow: 1,
+  },
+  cardActions: {
+    flex: 'flex-end',
+    paddingLeft: '10px',
   },
 }));
 
@@ -42,23 +38,26 @@ const MainScreen = () => {
   const classes = useStyles();
 
   const userStore = useContext(UserStore);
-  const { activeTournaments } = userStore;
+  const tournamentsStore = useContext(TournamentsStore);
+  const { enrolledTournaments } = userStore;
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     userStore.getUserTournaments().then(() => {
-      setLoading(false);
+      tournamentsStore.getOpenTournaments().then(() => {
+        setLoading(false);
+      });
     });
-  }, [userStore]);
+  }, [userStore, tournamentsStore]);
 
   return (
     <>
       <Hero joinTournament={true} />
-      <Container className={classes.cardGrid} maxWidth="md">
+      <Container maxWidth="md">
         {!loading ? (
           <Grid container spacing={4}>
-            {activeTournaments.length > 0 ? (
-              activeTournaments.map((tournament, key) => (
+            {enrolledTournaments.length > 0 ? (
+              enrolledTournaments.map((tournament, key) => (
                 <Grid item key={key} xs={12} sm={8} md={6}>
                   <Card className={classes.card}>
                     <div className={classes.details}>
@@ -66,40 +65,65 @@ const MainScreen = () => {
                         <Typography gutterBottom variant="h5" component="h2">
                           Score: {tournament.score}
                         </Typography>
-                        <Typography>
-                          Positioning: {tournament.positioning}
+                        <Typography gutterBottom variant="h6" component="h2">
+                          Tournament #{tournament.tournamentId}
                         </Typography>
+                        <Typography>Positioning: TBD</Typography>
                         <Typography>
                           Remaining Days: {tournament.remainingDays}
                         </Typography>
                       </CardContent>
                     </div>
-                    <div className={classes.playButton}>
+                    <div className={classes.cardActions}>
                       <CardActions>
-                        <Link
-                          to={{
-                            pathname: '/game',
-                            state: {
-                              score: tournament.score,
-                              tournamentId: tournament.tournamentId,
-                            },
-                          }}
-                        >
-                          PLAY
-                        </Link>
+                        <Grid container spacing={5}>
+                          <Grid item xs={6}>
+                            <Link
+                              to={{
+                                pathname: '/scoreboard',
+                                state: {
+                                  tournamentId: tournament.tournamentId,
+                                },
+                              }}
+                            >
+                              <Button variant="outlined" color="primary">
+                                VIEW SCOREBOARD
+                              </Button>
+                            </Link>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Link
+                              to={{
+                                pathname: '/game',
+                                state: {
+                                  score: tournament.score,
+                                  tournamentId: tournament.tournamentId,
+                                },
+                              }}
+                            >
+                              <Button variant="contained" color="primary">
+                                PLAY TOURNAMENT
+                              </Button>
+                            </Link>
+                          </Grid>
+                        </Grid>
                       </CardActions>
                     </div>
                   </Card>
                 </Grid>
               ))
             ) : (
-              <Typography
-                variant="h4"
-                align="center"
-                style={{ fontWeight: 600 }}
-              >
-                Click on the button to join a new tournament!
-              </Typography>
+              <Grid container justify="center">
+                <Grid item>
+                  <Typography
+                    variant="h4"
+                    align="center"
+                    style={{ fontWeight: 600 }}
+                  >
+                    Click on the button to join a new tournament!
+                  </Typography>
+                </Grid>
+              </Grid>
             )}
           </Grid>
         ) : (

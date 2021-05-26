@@ -7,19 +7,25 @@ import {
   Container,
 } from '@material-ui/core';
 
-const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
+const Score = ({ score, won, handleReturnToMain, correctAnswer, points }) => {
   return (
     <Container maxWidth="md">
       {won ? (
-        <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
-          Correct
-        </Typography>
+        <Grid>
+          <Typography
+            variant="h4"
+            align="center"
+            style={{ fontWeight: 600, color: 'green' }}
+          >
+            Correct!
+          </Typography>
+        </Grid>
       ) : (
         <Grid>
           <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
             Sorry that is not correct
           </Typography>
-          <Typography variant="h5" align="center">
+          <Typography variant="h6" align="center">
             The correct answer was:
             <Typography
               variant="subtitle1"
@@ -42,13 +48,30 @@ const Score = ({ score, won, handleReturnToMain, correctAnswer }) => {
           <Typography variant="subtitle1" align="center">
             Score
           </Typography>
+          {won ? (
+            <Typography
+              variant="subtitle2"
+              align="center"
+              style={{ fontWeight: 600 }}
+            >
+              Nice! You won +{points} points
+            </Typography>
+          ) : (
+            <Typography
+              variant="subtitle2"
+              align="center"
+              style={{ fontWeight: 600 }}
+            >
+              Yikes! You lost {points} points
+            </Typography>
+          )}
         </Grid>
-        <Grid item xs={12}>
+        <Grid item xs={12} align="center" style={{ marginTop: '15px' }}>
           <Button
             onClick={handleReturnToMain}
-            fullWidth
+            // fullWidth
             color="primary"
-            style={{ maxWidth: '100%' }}
+            variant="contained"
           >
             RETURN TO MENU
           </Button>

@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import TournamentsStore from '../stores/tournaments-store';
 import UserStore from '../stores/user-store';
+import { Link } from 'react-router-dom';
 import {
   Card,
   CardContent,
@@ -11,10 +12,7 @@ import {
   CardActions,
   Button,
   CircularProgress,
-  Snackbar,
 } from '@material-ui/core';
-import MuiAlert from '@material-ui/lab/Alert';
-import { useHistory } from 'react-router-dom';
 import { Hero } from './index';
 
 const useStyles = makeStyles(theme => ({
@@ -31,62 +29,52 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   cardActions: {
-    flex: 'flex-end',
+    // flex: 'flex-end',
+    paddingLeft: '10px',
   },
 }));
 
 const Tournaments = () => {
   const classes = useStyles();
-  const history = useHistory();
-
   const tournamentsStore = useContext(TournamentsStore);
   const { tournaments } = tournamentsStore;
   const userStore = useContext(UserStore);
 
   const [loading, setLoading] = useState(true);
-  const [open, setOpen] = React.useState(false);
 
   useEffect(() => {
     tournamentsStore.getTournaments().then(() => {
-      setLoading(false);
+      tournamentsStore.getOpenTournaments().then(() => {
+        setLoading(false);
+      });
     });
+    // tournamentsStore
+    //   .getOpenTournaments()
+    //   .then(tournamentsStore.getTournaments().then(setLoading(false)));
+    // tournamentsStore.getTournaments().then(
+    //   tournamentsStore.getOpenTournaments().then(() => {
+    //     setLoading(false);
+    //   })
+    // );
   }, [tournamentsStore]);
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
-
-    setOpen(false);
-  };
-
-  const handleJoinTournament = tournamentId => {
-    setOpen(true);
-    userStore.joinTournament(tournamentId).then(() => {});
-    history.push('/');
-  };
-
-  const SnackbarMessage = () => {
-    return (
-      <>
-        <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
-          <MuiAlert
-            elevation={6}
-            variant="filled"
-            onClose={handleClose}
-            severity="success"
-          >
-            This is a success message!
-          </MuiAlert>
-        </Snackbar>
-      </>
-    );
+  const handleJoinTournament = (
+    tournamentId,
+    remainingDays,
+    playersEnrolled
+  ) => {
+    setLoading(true);
+    userStore
+      .joinTournament(tournamentId, remainingDays, playersEnrolled)
+      .then(tournamentsStore.enrollUser(tournamentId))
+      .then(() => {
+        setLoading(false);
+      });
   };
 
   return (
     <>
       <Hero joinTournament={false} />
-      {open && <SnackbarMessage />}
       <Container maxWidth="md">
         {!loading ? (
           <Grid container spacing={4}>
@@ -97,39 +85,69 @@ const Tournaments = () => {
                     <div className={classes.details}>
                       <CardContent className={classes.cardContent}>
                         <Typography gutterBottom variant="h5" component="h2">
+                          Tournament #{tournament.id}
+                        </Typography>
+                        <Typography gutterBottom variant="h6" component="h2">
                           Remaining days: {tournament.remainingDays}
                         </Typography>
                         <Typography>
                           High Score: {tournament.highScore}
                         </Typography>
                         <Typography>
-                          Players enrolled: {tournament.players}
+                          Players enrolled: {tournament.playersEnrolled}
                         </Typography>
                       </CardContent>
                     </div>
                     <div>
                       <CardActions className={classes.cardActions}>
-                        <Button>VIEW SCOREBOARD</Button>
-                        <Button
-                          onClick={() =>
-                            handleJoinTournament(tournament.tournamentId)
-                          }
-                        >
-                          JOIN TOURNAMENT
-                        </Button>
+                        <Grid container spacing={8}>
+                          <Grid item xs={6}>
+                            <Link
+                              to={{
+                                pathname: '/scoreboard',
+                                state: {
+                                  tournamentId: tournament.id,
+                                },
+                              }}
+                            >
+                              <Button variant="outlined" color="primary">
+                                VIEW SCOREBOARD
+                              </Button>
+                            </Link>
+                          </Grid>
+                          <Grid item xs={6}>
+                            <Button
+                              onClick={() =>
+                                handleJoinTournament(
+                                  tournament.id,
+                                  tournament.remainingDays,
+                                  tournament.playersEnrolled
+                                )
+                              }
+                              variant="contained"
+                              color="primary"
+                            >
+                              JOIN TOURNAMENT
+                            </Button>
+                          </Grid>
+                        </Grid>
                       </CardActions>
                     </div>
                   </Card>
                 </Grid>
               ))
             ) : (
-              <Typography
-                variant="h4"
-                align="center"
-                style={{ fontWeight: 600 }}
-              >
-                Click on the button to join a new tournament!
-              </Typography>
+              <Grid container justify="center">
+                <Grid item>
+                  <Typography
+                    variant="h4"
+                    align="center"
+                    style={{ fontWeight: 600 }}
+                  >
+                    There are no tournaments available.
+                  </Typography>
+                </Grid>
+              </Grid>
             )}
           </Grid>
         ) : (

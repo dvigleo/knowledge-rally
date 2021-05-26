@@ -8,47 +8,85 @@ class UserStore {
     makeAutoObservable(this);
   }
 
-  activeTournaments = [];
+  enrolledTournaments = []; // Tournaments the player is enrolled to
   username = '';
 
+  /**
+   * Updates the user socre in the desired tournament
+   * @param  {String} tournamentId  The tournament id to edit
+   * @param  {Number} score         The score to edit
+   */
   updateUserScore = async (tournamentId, score) => {
-    console.log(tournamentId, score);
-    let updatedTournaments = this.activeTournaments.map(t =>
-      t.tournamentId === tournamentId ? { ...t, score: score } : toJS(t)
+    // Update the user score in the tournament (client-side)
+    let updatedTournaments = this.enrolledTournaments.map(tournament =>
+      tournament.tournamentId === tournamentId
+        ? { ...tournament, score: score }
+        : toJS(tournament)
     );
-    // console.log('RECENTLY UPDATED, ', toJS(updatedTournaments));
+
+    // Update the user score in the DB
     try {
       await requests.updateUserData({
-        activeTournaments: [...updatedTournaments],
+        tournaments: [...updatedTournaments],
         id: this.username,
       });
-      this.activeTournaments = toJS(updatedTournaments);
-      // console.log('FROM USERSTORE', toJS(this.activeTournaments));
+      this.enrolledTournaments = toJS(updatedTournaments);
     } catch (err) {
       console.log('There was an error updating the user score ', err);
     }
   };
 
+  /**
+   * Obtain the tournaments the user is enrolled to
+   */
   getUserTournaments = async () => {
+    let user = await Auth.currentAuthenticatedUser();
+    this.username = user.username;
+
+    // Get the user data from the DB
     try {
-      let user = await Auth.currentAuthenticatedUser();
-      this.username = user.username;
-      console.log(this.username);
       let userData = await requests.getUserData(this.username);
+
+      // IF there are tournaments, save them in the variable
       if (userData.body.tournaments.length > 0) {
-        this.activeTournaments = toJS(userData.body.tournaments);
+        this.enrolledTournaments = toJS(userData.body.tournaments);
       }
-      // console.log('FROM DB: ', toJS(this.activeTournaments));
     } catch (err) {
       console.log('There was a problem retrieving the user data ', err);
     }
   };
 
-  joinTournament = async tournamentId => {
+  /**
+   * Updates the tournament highscore and players score in the client and DB
+   * @param  {String} tournamentId      The tournament id to edit
+   * @param  {Number} remainingDays     Remaining days in the tournament
+   * @param  {Number} playersEnrolled   Number of players enrolled to the tournament
+   */
+  joinTournament = async (tournamentId, remainingDays, playersEnrolled) => {
     let user = await Auth.currentAuthenticatedUser();
     this.username = user.username;
-    console.log(tournamentId);
-    await requests.joinTournament(tournamentId, this.username);
+
+    // Update the array of objects of tournaments in the player
+    let updatedTournaments = [
+      {
+        remainingDays: remainingDays,
+        score: 0,
+        positioning: '0 / ' + playersEnrolled,
+        tournamentId: tournamentId,
+      },
+      ...this.enrolledTournaments,
+    ];
+    this.enrolledTournaments = toJS(updatedTournaments);
+
+    // Update the user data
+    try {
+      await requests.joinTournament({
+        id: this.username,
+        tournaments: [...updatedTournaments],
+      });
+    } catch (err) {
+      console.log('There was an error joining a tournament ', err);
+    }
   };
 }
 

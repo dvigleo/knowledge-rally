@@ -5,15 +5,38 @@ const responseBody = response => response.data;
 
 const requests = {
   getQuestion: API_URL => axios.get(API_URL).then(responseBody),
-  getUserData: body => API.get('knowledgeRallyGameApi', `/tournaments/${body}`),
+
+  // user
+  getUserData: body => API.get('knowledgeRallyGameApi', `/user/${body}`),
   updateUserData: body =>
-    API.put('knowledgeRallyGameApi', `/tournaments/${body.id}`, {
+    API.put('knowledgeRallyGameApi', `/user/${body.id}`, {
       body: {
         tournaments: body.tournaments,
       },
     }),
   joinTournament: body =>
-    console.log('user will be joined to a tournament here'),
+    API.put('knowledgeRallyGameApi', `/user/${body.id}`, {
+      body: {
+        tournaments: body.tournaments,
+      },
+    }),
+
+  // tournaments
+  getTournaments: () => API.get('knowledgeRallyGameApi', '/tournaments/id'),
+  enrolUser: body =>
+    API.put('knowledgeRallyGameApi', `/tournaments`, {
+      body: {
+        id: body.id,
+        ...body,
+      },
+    }),
+  updateTournamentData: body =>
+    API.put('knowledgeRallyGameApi', `/tournaments`, {
+      body: {
+        id: body.id,
+        ...body,
+      },
+    }),
 };
 
 export default requests;

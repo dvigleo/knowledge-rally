@@ -1,0 +1,5 @@
+{
+    "tableName": "tournamentsdb",
+    "partitionKeyName": "id",
+    "partitionKeyType": "S"
+}

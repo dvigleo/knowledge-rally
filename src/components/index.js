@@ -5,5 +5,15 @@ import Score from './score';
 import Questionaire from './questionaire';
 import Hero from './hero';
 import Tournaments from './tournaments';
+import ScoreBoard from './scoreboard';
 
-export { Game, MainScreen, RiskPoints, Score, Questionaire, Hero, Tournaments };
+export {
+  ScoreBoard,
+  Game,
+  MainScreen,
+  RiskPoints,
+  Score,
+  Questionaire,
+  Hero,
+  Tournaments,
+};

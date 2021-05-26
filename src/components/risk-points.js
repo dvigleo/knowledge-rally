@@ -9,7 +9,6 @@ import {
   Grid,
   Container,
 } from '@material-ui/core';
-import { Link } from 'react-router-dom';
 
 const points = [
   {
@@ -39,7 +38,12 @@ const RiskPoints = ({ handlePointsToRisk }) => {
         <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
           Select the points to risk for the next question
         </Typography>
-        <Grid container justify="center" alignItems="center">
+        <Grid
+          container
+          justify="center"
+          alignItems="center"
+          style={{ padding: '20px' }}
+        >
           <form>
             <FormControl component="fieldset" fullWidth={true}>
               <RadioGroup
@@ -60,18 +64,12 @@ const RiskPoints = ({ handlePointsToRisk }) => {
               </RadioGroup>
             </FormControl>
             <Grid container>
-              <Grid item xs={6}>
-                <Link to="/">
-                  <Button fullWidth color="primary">
-                    RETURN TO MAIN SCREEN
-                  </Button>
-                </Link>
-              </Grid>
-              <Grid item xs={6}>
+              <Grid item xs={12} style={{ padding: '20px' }}>
                 <Button
                   onClick={() => handlePointsToRisk(pointsToRisk)}
                   fullWidth
                   color="primary"
+                  variant="contained"
                 >
                   START GAME
                 </Button>

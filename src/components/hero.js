@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import { useHistory, useLocation } from 'react-router-dom';
-import kr from '../assets/images/knowledge-rally.png';
-import { Link } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import logo from '../assets/images/blue2.png';
+import tinyLogo from '../assets/images/tiny.png';
 import {
   Typography,
   Button,
@@ -12,7 +12,7 @@ import {
   CssBaseline,
   Container,
 } from '@material-ui/core';
-import { AmplifySignOut } from '@aws-amplify/ui-react';
+import { Auth } from 'aws-amplify';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -34,24 +34,38 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const Hero = ({ joinTournament }) => {
-  const classes = useStyles();
   const history = useHistory();
+  const classes = useStyles();
+
+  async function signOut() {
+    try {
+      await Auth.signOut({ global: true });
+      history.push('/');
+      window.location.reload();
+    } catch (error) {
+      console.log('error signing out: ', error);
+    }
+  }
+
   return (
     <>
       <div className={classes.root}>
         <CssBaseline />
         <AppBar position="relative" color="default">
           <Toolbar>
+            <img src={tinyLogo} alt="Knowledge-rally Tiny Logo" />
             <Typography variant="h6" className={classes.title}>
               Knowledge Rally
             </Typography>
-            <AmplifySignOut />
+            <Button variant="contained" color="primary" onClick={signOut}>
+              SIGNOUT
+            </Button>
           </Toolbar>
         </AppBar>
         <div className={classes.heroContent}>
           <Container maxWidth="sm">
             <Grid container spacing={2} justify="center">
-              <img src={kr} alt="Knowledge-rally Logo" />
+              <img src={logo} alt="Knowledge-rally Logo" />
             </Grid>
             <div className={classes.heroButtons}>
               <Grid container spacing={2} justify="center">
