@@ -29,7 +29,6 @@ const useStyles = makeStyles(theme => ({
     flexGrow: 1,
   },
   cardActions: {
-    // flex: 'flex-end',
     paddingLeft: '10px',
   },
 }));
@@ -48,14 +47,6 @@ const Tournaments = () => {
         setLoading(false);
       });
     });
-    // tournamentsStore
-    //   .getOpenTournaments()
-    //   .then(tournamentsStore.getTournaments().then(setLoading(false)));
-    // tournamentsStore.getTournaments().then(
-    //   tournamentsStore.getOpenTournaments().then(() => {
-    //     setLoading(false);
-    //   })
-    // );
   }, [tournamentsStore]);
 
   const handleJoinTournament = (

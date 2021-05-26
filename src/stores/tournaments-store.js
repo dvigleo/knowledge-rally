@@ -164,7 +164,6 @@ class TournamentsStore {
     let temp = this.openTournaments.find(
       tournament => tournament.id === tournamentId
     );
-    console.log(toJS(this.openTournaments));
     try {
       if (temp.players.length > 0) {
         this.scoreboard = temp.players;
