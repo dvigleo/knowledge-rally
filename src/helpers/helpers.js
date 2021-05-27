@@ -1,18 +1,19 @@
 import constants from './constants';
 
-const decodeHTML = html => {
-  var txt = document.createElement('textarea');
-  txt.innerHTML = html;
-  return txt.value;
-};
-
-const formatChoices = choices => {
-  return choices.map(choice => {
-    return decodeHTML(choice.trim());
+const combineAllAnswers = question => {
+  console.log(question.correct_answer);
+  console.log(question.incorrect_answers);
+  question.incorrect_answers.push(question.correct_answer);
+  question.incorrect_answers.map(choice => {
+    console.log(choice);
+    return choice.trim();
   });
+  const shuffledAnswers = decodeURIComponent(
+    question.incorrect_answers.sort((a, b) => 0.5 - Math.random())
+  ).split(',');
+  console.log(shuffledAnswers);
+  return shuffledAnswers;
 };
-const combineAllAnswers = question =>
-  question.correct_answer.split(',').concat(question.incorrect_answers);
 
 const capitalizeWord = word => {
   let firstLetter = word.charAt(0);
@@ -24,9 +25,9 @@ const formatAPIQuizData = question => {
   return {
     category: capitalizeWord(question.category),
     difficulty: question.difficulty,
-    question: decodeHTML(question.question.trim()),
-    answers: formatChoices(combineAllAnswers(question)),
-    correct: decodeHTML(question.correct_answer.trim()),
+    question: question.question.trim(),
+    answers: combineAllAnswers(question),
+    correct: decodeURIComponent(question.correct_answer.trim()),
   };
 };
 

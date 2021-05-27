@@ -12,8 +12,14 @@ class QuestionStore {
 
   getQuestion = async () => {
     try {
-      const question = await requests.getQuestion(getCategory());
-      const formattedQuestion = formatAPIQuizData(question.results[0]);
+      let question = await requests.getQuestion(getCategory());
+      let formattedQuestion = formatAPIQuizData(question.results[0]);
+      console.log(formattedQuestion.answers.length);
+      if (formattedQuestion.answers.length > 4) {
+        console.log('repeat');
+        question = await requests.getQuestion(getCategory());
+        formattedQuestion = formatAPIQuizData(question.results[0]);
+      }
       this.question = formattedQuestion;
     } catch (err) {
       console.log('There was a problem getting the question ', err);

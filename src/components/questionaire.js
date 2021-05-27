@@ -23,8 +23,6 @@ const Questionaire = ({
   handleAnswer,
   data: { question, answers, correct, category },
 }) => {
-  const shuffledAnswers = answers.sort((a, b) => 0.5 - Math.random());
-
   console.log('correct: ', correct);
   return (
     <Container maxWidth="md">
@@ -36,17 +34,17 @@ const Questionaire = ({
       >
         <Grid item xs={12}>
           <Typography variant="h4" align="center" style={{ fontWeight: 600 }}>
-            {question}
+            {decodeURIComponent(question)}
           </Typography>
         </Grid>
         <Grid item xs={12} style={{ padding: '10px' }}>
           <Typography variant="subtitle1" align="center">
-            Category: {category}
+            Category: {decodeURIComponent(category)}
           </Typography>
         </Grid>
       </Grid>
       <Grid container spacing={4}>
-        {shuffledAnswers.map((answer, key) => (
+        {answers.map((answer, key) => (
           <Grid item xs={6} key={key}>
             <Button
               key={answer}

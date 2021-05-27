@@ -18,11 +18,11 @@
       "function": {
         "knowledgeRallyGameFunction": {
           "deploymentBucketName": "amplify-knowledgerallygame-dev-233558-deployment",
-          "s3Key": "amplify-builds/knowledgeRallyGameFunction-424a6e59335359484d47-build.zip"
+          "s3Key": "amplify-builds/knowledgeRallyGameFunction-463747304a784564546d-build.zip"
         },
         "knowledgeRallyTournaments": {
           "deploymentBucketName": "amplify-knowledgerallygame-dev-233558-deployment",
-          "s3Key": "amplify-builds/knowledgeRallyTournaments-37757370487071686d47-build.zip"
+          "s3Key": "amplify-builds/knowledgeRallyTournaments-307071685a5571474b62-build.zip"
         }
       }
     }
