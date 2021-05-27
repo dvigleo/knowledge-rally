@@ -10,13 +10,16 @@ class QuestionStore {
 
   question = {};
 
+  /**
+   * Get a question from the Open Trivia API.
+   */
   getQuestion = async () => {
     try {
+      // A random category is obtained, and the question is formatted accordingly
       let question = await requests.getQuestion(getCategory());
       let formattedQuestion = formatAPIQuizData(question.results[0]);
-      console.log(formattedQuestion.answers.length);
+      // If the answers is > 4, fetch another question from the API
       if (formattedQuestion.answers.length > 4) {
-        console.log('repeat');
         question = await requests.getQuestion(getCategory());
         formattedQuestion = formatAPIQuizData(question.results[0]);
       }

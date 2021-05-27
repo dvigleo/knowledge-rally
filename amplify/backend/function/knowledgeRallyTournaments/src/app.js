@@ -20,7 +20,7 @@ if (process.env.ENV && process.env.ENV !== 'NONE') {
   tableName = tableName + '-' + process.env.ENV;
 }
 
-const userIdPresent = true; // TODO: update in case is required to use that definition
+const userIdPresent = true;
 const partitionKeyName = 'id';
 const partitionKeyType = 'S';
 const sortKeyName = '';
@@ -75,7 +75,6 @@ app.get('/tournaments' + hashKeyPath, function (req, res) {
       res.json({
         statusCode: 200,
         url: req.url,
-        // body: response.Item,
         queryParams: queryParams,
         response: response,
       });

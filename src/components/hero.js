@@ -1,7 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { useHistory } from 'react-router-dom';
-import logo from '../assets/images/blue2.png';
+import logo from '../assets/images/knowledge-rally.png';
 import tinyLogo from '../assets/images/tiny.png';
 import {
   Typography,
